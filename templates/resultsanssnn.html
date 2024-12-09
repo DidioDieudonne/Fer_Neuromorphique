@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats de la prédiction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- En-tête de la page avec le nom de l'université -->
+    <header>
+        <div class="container">
+            <h1>INSTITUT FRANCOPHONE INTERNATIONAL VNU </h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Accueil</a></li>
+                    <li><a href="#resultats">Résultats</a></li>
+                    <li><a href="#evaluation">Évaluation</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Section principale pour les résultats -->
+    <section id="resultats" class="main-content">
+        <div class="container">
+            <h2>Résultats de la prédiction</h2>
+            <img src="data:image/png;base64,{{ image_data }}" alt="Résultat" style="max-width: 100%; height: auto;">
+            
+            <h3>Résultats du modèle CNN</h3>
+            {% if cnn_results %}
+                <ul>
+                    {% for result in cnn_results %}
+                        <li>Émotion : {{ result.emotion }} (Confiance : {{ result.confidence | round(2) }})</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>Aucune émotion détectée par le modèle CNN.</p>
+            {% endif %}
+            
+            <h3>Résultat du modèle SNN</h3>
+            {% if snn_result %}
+                <p>Émotion : {{ snn_result.emotion }} (Confiance : {{ snn_result.confidence | round(2) }})</p>
+            {% else %}
+                <p>Aucune émotion détectée par le modèle SNN.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Section d'évaluation -->
+    <section id="evaluation" class="options">
+        <div class="container">
+            <h2>Évaluez les modèles</h2>
+            <form action="/rate" method="POST">
+                <div class="form-group">
+                    <label for="cnn_score">Note pour le modèle CNN :</label>
+                    <select id="cnn_score" name="cnn_score" required>
+                        <option value="">Sélectionnez une note</option>
+                        {% for i in range(1, 11) %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="snn_score">Note pour le modèle SNN :</label>
+                    <select id="snn_score" name="snn_score" required>
+                        <option value="">Sélectionnez une note</option>
+                        {% for i in range(1, 11) %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="user_feedback">Vos commentaires :</label>
+                    <textarea id="user_feedback" name="user_feedback" rows="4" cols="50"></textarea>
+                </div>
+                <br>
+                <input type="submit" value="Envoyer votre évaluation" class="cta-button">
+            </form>
+            <br>
+            <a href="/" class="link">Retourner à la page d'accueil</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; ANALYSE DES APPROCHES NEUROMORPHIQUES ET CONVENTIONNELLES DE DEEP LEARNING </p>
+        </div>
+    </footer>
+
+</body>
+</html>

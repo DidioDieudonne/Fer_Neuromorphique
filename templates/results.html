@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats de la prédiction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>INSTITUT FRANCOPHONE INTERNATIONAL VNU</h1>
+        </div>
+    </header>
+
+    <section id="resultats" class="main-content">
+        <div class="container">
+            <h2>Résultats de la prédiction avec le modèle CNN et SNN</h2>
+            <img src="data:image/png;base64,{{ image_data }}" alt="Résultat" style="max-width: 100%; height: auto;">
+            
+            {% if cnn_results %}
+                <h3>Résultats CNN :</h3>
+                <ul>
+                    {% for result in cnn_results %}
+                        <li>Émotion : {{ result.emotion }} (Confiance : {{ result.confidence | round(2) }})</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+    
+            {% if snn_results %}
+                <h3>Résultats SNN :</h3>
+                <ul>
+                    {% for result in snn_results %}
+                        <li>Émotion : {{ result.emotion }} (Confiance : {{ result.confidence | round(2) }})</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <!-- Formulaire d'évaluation -->
+            <h3>Évaluez les modèles :</h3>
+            <form action="/rate" method="POST">
+                <label for="cnn_score">Note pour le modèle CNN :</label>
+                <select name="cnn_score" required>
+                    <option value="1">1 - Très mauvais</option>
+                    <option value="2">2 - Mauvais</option>
+                    <option value="3">3 - Moyen</option>
+                    <option value="4">4 - Bon</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+
+                <br><br>
+
+                <label for="snn_score">Note pour le modèle SNN :</label>
+                <select name="snn_score" required>
+                    <option value="1">1 - Très mauvais</option>
+                    <option value="2">2 - Mauvais</option>
+                    <option value="3">3 - Moyen</option>
+                    <option value="4">4 - Bon</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+
+                <br><br>
+
+                <label for="user_feedback">Commentaires :</label>
+                <textarea name="user_feedback" rows="4" cols="50" placeholder="Donnez votre avis sur les performances des modèles"></textarea>
+
+                <br><br>
+                <input type="submit" value="Soumettre l'évaluation" class="cta-button">
+            </form>
+
+            <!-- Boutons de navigation -->
+            <div class="buttons">
+                <a href="/" class="cta-button">Prédire une autre image</a>
+                <a href="/thank_you" class="cta-button">Terminer</a>
+            </div>
+        </div>
+    </section>
+    
+</body>
+</html>
